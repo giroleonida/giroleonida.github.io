@@ -21,6 +21,11 @@
 <script>
   const p = new URLSearchParams(location.search);
   const code = p.get('code'), err = p.get('error');
+  // Autorização iniciada pelo painel local (Giro Leonida Publisher): devolve direto para ele.
+  if ((p.get('state') || '').startsWith('local-')) {
+    document.getElementById('msg').textContent = 'Voltando para o Giro Leonida Publisher...';
+    location.replace('http://localhost:8765/tiktok/callback' + location.search);
+  }
   document.getElementById('msg').textContent = code
     ? 'Autorizado! Copie o código abaixo e cole no terminal do Claude:'
     : ('Erro: ' + (err || 'nenhum código recebido') + ' ' + (p.get('error_description') || ''));
