@@ -19,17 +19,21 @@
   <button onclick="navigator.clipboard.writeText(document.getElementById('code').textContent)">Copiar</button>
 </div>
 <script>
+(function () {
   const p = new URLSearchParams(location.search);
   const code = p.get('code'), err = p.get('error');
   // Autorização iniciada pelo painel local (Giro Leonida Publisher): devolve direto para ele.
   if ((p.get('state') || '').startsWith('local-')) {
     document.getElementById('msg').textContent = 'Voltando para o Giro Leonida Publisher...';
+    document.querySelector('button').style.display = 'none';
     location.replace('http://localhost:8765/tiktok/callback' + location.search);
+    return;  // não mostra o código na tela
   }
   document.getElementById('msg').textContent = code
     ? 'Autorizado! Copie o código abaixo e cole no terminal do Claude:'
     : ('Erro: ' + (err || 'nenhum código recebido') + ' ' + (p.get('error_description') || ''));
   document.getElementById('code').textContent = code ? JSON.stringify({code, state: p.get('state')}) : '';
+})();
 </script>
 </body>
 </html>
